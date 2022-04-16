@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JASON and AJAX</title>
+	
+	<style>
+	table{
+    border-collapse: collapse;
+    width: 100%;
+    margin-top:20px;
+    }
+    table td, table th {
+    border: 1px solid #f9f1ed;
+    padding: 8px;
+    }
+    table tr:nth-child(even){background-color: #f8f5f1;}
+    table tr:hover {background-color: #f9f1ed;}
+    table th {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+    background-color: #ed6b29;
+    color: white;
+    }
+
+    #get-details{
+        margin: 0 auto;
+        background-color:#443328;
+        padding:10px 15px;
+        font-size:1em;
+        font-weight:bold;
+        border-radius:5px;
+        color:white;
+        display: block;
+        }
+        #get-details[disabled]{
+        opacity: 0.65;
+        cursor: not-allowed;
+    }	
+	</style>
+	
+</head>
+<body>
+<br>
+<br>
+    <button id="get-details">Get Details of All American Presidents</button>
+    <div id="results"></div>
+
+<script>	
+        var ourRequest = new XMLHttpRequest();
+        var ourButton = document.getElementById('get-details');
+        var ourDiv = document.getElementById('results');
+        
+        ourButton.addEventListener('click', function(){
+        ourRequest.open('GET', 'https://raw.githubusercontent.com/hitch17/sample-data/master/presidents.json');
+        ourRequest.onload = function(){
+        var ourData= JSON.parse(ourRequest.responseText);
+        renderHtml(ourData);
+        };
+        ourRequest.send();
+        });
+        
+        function renderHtml(data){
+                var htmlString = '';
+                htmlString += '<table><tr><th>No</th> <th>Name</th> <th>Birth</th> <th>Death</th> <th>Took Office</th> <th>Left Office</th> <th>Party</th> </tr>';
+                for (i=0;i< data.length;i++){
+                htmlString += '<tr>';
+                htmlString += '<td>'+ data[i].number + '</td>';
+                htmlString += '<td>'+ data[i].president + '</td>';
+                htmlString += '<td>'+ data[i].birth_year + '</td>';
+                htmlString += '<td>'+ data[i].death_year + '</td>';
+                htmlString += '<td>'+ data[i].took_office + '</td>';
+                htmlString += '<td>'+ data[i].left_office + '</td>';
+                htmlString += '<td>'+ data[i].party + '</td>';
+                htmlString += '</tr>';
+                }
+                htmlString += '</table>';
+                ourDiv.insertAdjacentHTML('beforebegin', htmlString);
+                }
+        
+                var clickCounter = 0;        
+        ourButton.addEventListener('click', function(){        
+                    clickCounter++;
+                if (clickCounter >= 1){
+                    ourButton.setAttribute('disabled', 'disabled');
+                    }
+                });
+        
+</script>
+        
+</body>
+</html>
